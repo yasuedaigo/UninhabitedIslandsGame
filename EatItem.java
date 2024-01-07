@@ -27,6 +27,12 @@ public class EatItem {
     public String getCauseOfDeath() {
         return causeOfDeath;
     }
+    public void showInfo(){
+        System.out.println(itemName + " を見つけました。");
+        System.out.println("危険度 : " + dangerLevel);
+        System.out.println("回復量 : " + expectedHeelingHp);
+    }
+
     /**
      * 食べることができたかどうかの判定
      * dangerLevelと乱数の値で判定を行う

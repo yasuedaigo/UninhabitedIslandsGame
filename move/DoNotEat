@@ -1,0 +1,11 @@
+public class DoNotEat extends Move {
+    private int value = 2;
+
+    public void move(Player player, EatItem item) {
+        System.out.println(item.getItemName() + "を食べなかった");
+    }
+
+    public int getValue() {
+        return value;
+    }
+}

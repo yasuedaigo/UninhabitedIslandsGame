@@ -1,0 +1,11 @@
+public class Hint extends Move {
+    private int value = 3;
+
+    public void move(Player player, EatItem item) {
+        System.out.println("次の日のアイテムは" + item.getItemName() + "です。");
+    }
+
+    public int getValue() {
+        return value;
+    }
+}
