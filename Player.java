@@ -1,16 +1,21 @@
 import java.util.Scanner;
 import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
+
+
 public class Player {
     private static final int DEFAULT_HP = 50;
     private static final int MAX_HP = 100;
     private static final int MIN_HP = 0;
     private static final int MAX_HINT_COUNT = 3;
     private static final int DECREASE_HP = 10;
-    private static final String SHOWINFO_MESSAGE = "現在のプレイヤーのHP: %d";  // メッセージテンプレート
-    Scanner scanner;
-    private int hp; // ヒットポイント
-    private int hintCount = MAX_HINT_COUNT; // 選択肢
+    private Scanner scanner;
+    private int hp;
+    private int hintCount = MAX_HINT_COUNT;
+
+    /**
+     * プレイヤーの行動の選択肢
+     */
     public enum Move {
         EAT(1,"食べる"),
         DO_NOT_EAT(2,"食べない"),
@@ -18,28 +23,51 @@ public class Player {
 
         private final int value;
         private final String name;
+
+        /**
+         * @param value 行動を識別する数値
+         * @param name 行動の名前
+         */
         Move(int value, String name) {
             this.value = value;
             this.name = name;
         }
-        private void showMovevalue(){
+
+        /**
+         * 行動の選択肢を表示
+         */
+        private void showMoveValue(){
             System.out.println(this.value + " : " + this.name);
         }
+
+        /**
+         * @return 行動の名前
+         */
         public String getName(){
             return this.name;
         }
     };
+
     private Move choisedMove;
 
+    /**
+     * Playerのコンストラクタ
+     */
     public Player() {
-        this.hp = DEFAULT_HP;  // 初期HPを50に設定
+        this.hp = DEFAULT_HP;
         scanner = new Scanner(System.in);
     }
 
+    /**
+     * プレイヤーのHPを表示
+     */
     public void showInfo() {
-        System.out.println(String.format(SHOWINFO_MESSAGE, hp));
+        System.out.println("現在のプレイヤーのHP: " + this.hp);
     }
 
+    /**
+     * プレイヤーの行動を選択
+     */
     public void choiceMove(){
         showChoices();
         choisedMove = null;
@@ -48,7 +76,10 @@ public class Player {
         }
     }
 
-    public void choiceMoveWithoutHint(){
+    /**
+     * プレイヤーの行動を標準入力によって選択 ※ヒント抜き
+     */
+    private void choiceMoveWithoutHint(){
         showChoicesWithoutHint();
         choisedMove = null;
         while(choisedMove == null || choisedMove == Move.HINT){
@@ -56,7 +87,10 @@ public class Player {
         }
     }
 
-    public void determineMoveFromInputInt(){
+    /**
+     * プレイヤーの行動を標準入力によって選択
+     */
+    private void determineMoveFromInputInt(){
         int choiceInt = inputInt();
         for (Move move : Move.values()) {
             if (move.value == choiceInt) {
@@ -65,6 +99,10 @@ public class Player {
         }
     }
 
+    /**
+     * 標準入力から数値を受け取る
+     * @return 入力された数値
+     */
     private int inputInt(){
         int inputInt = -1;
         while (true) {
@@ -83,6 +121,11 @@ public class Player {
         return inputInt;
     }
 
+    /**
+     * プレイヤーの行動を実行
+     * @param todayItem その日のアイテム
+     * @param nextItem 次の日のアイテム
+     */
     public void doMove(EatItem todayItem,EatItem nextItem){
         switch (choisedMove) {
             case EAT:
@@ -102,24 +145,36 @@ public class Player {
         
     }
 
-    public void showChoices(){
+    /**
+     * 行動の選択選択肢を表示
+     */
+    private void showChoices(){
         for (Move move : Move.values()) {
-            move.showMovevalue();
+            move.showMoveValue();
         }
     }
 
-    public void showChoicesWithoutHint(){
+    /**
+     * 行動の選択選択肢を表示 ※ヒント抜き
+     */
+    private void showChoicesWithoutHint(){
         for (Move move : Move.values()) {
             if(move != Move.HINT){
-                move.showMovevalue();
+                move.showMoveValue();
             }
         }
     }
 
+    /**
+     * @return プレイヤーのHP
+     */
     public int getHp() {
         return hp;
     }
 
+    /**
+     * @return プレイヤーの最小HP
+     */
     public int get_MIN_HP() {
         return MIN_HP;
     }
@@ -128,12 +183,20 @@ public class Player {
         this.hp = hp;
     }
 
+    /**
+     * @return プレイヤーに設定されている行動
+     */
     public Move getMove() {
         return choisedMove;
     }
 
-    public void eat(EatItem item)
+    /**
+     * アイテムを食べる行動
+     * @param item 食べるアイテム
+     */
+    private void eat(EatItem item)
     {
+        //食べることができた場合
         if (item.canEat()) {
             this.hp += item.getExpectedHeelingHP();
             if(this.hp > Player.MAX_HP){
@@ -141,27 +204,34 @@ public class Player {
             }
             System.out.println(item.getItemName() + " を食べた。HPが回復した!");
         } else {
-            // 食べられない場合の効果を適用
+        //食べることができなかった場合
             System.out.println(item.getItemName() + " を食べられなかった。");
             System.out.println(item.getCauseOfDeath());
             this.hp = Player.MIN_HP;
         }
     }
 
-    public void doNotEat(EatItem item)
+    /**
+     * アイテムを食べない行動
+     * @param item 食べないアイテム
+     */
+    private void doNotEat(EatItem item)
     {
         System.out.println(item.getItemName() + "を食べなかった");
         this.hp -= DECREASE_HP;
     }
 
-    public void hint(EatItem item)
+    /**
+     * ヒントを見る行動
+     * @param item 次の日のアイテム
+     */
+    private void hint(EatItem item)
     {
         if(hintCount <= 0){
             System.out.println("ヒントは3回しか使えません。");
             return;
-        }else{
-            hintCount--;
         }
+        hintCount--;
         System.out.println("次の日のアイテムは " + item.getItemName() + " です。");
         System.out.println("残りのヒントは " + hintCount + " 回です。");
     }

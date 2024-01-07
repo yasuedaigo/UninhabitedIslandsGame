@@ -1,3 +1,0 @@
-abstract class Move {
-    abstract public void move(Player player, EatItem item);
-}

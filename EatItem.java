@@ -1,5 +1,6 @@
 import java.util.Random;
 
+
 public class EatItem {
     private static final int MAX_RANDOM_RANGE = 100;
     private String itemName; // アイテム名
@@ -7,6 +8,13 @@ public class EatItem {
     private int expectedHeelingHp; // 食べたときのHP回復量
     private String causeOfDeath; // 死因
 
+    /**
+     * EatItemのコンストラクタ
+     * @param itemName アイテム名
+     * @param dangerLevel 危険度
+     * @param expectedHeelingHp 食べたときのHP回復量
+     * @param causeOfDeath 死因
+     */
     public EatItem(
           String itemName, int dangerLevel, int expectedHeelingHp, String causeOfDeath
         ) {
@@ -15,18 +23,38 @@ public class EatItem {
         this.expectedHeelingHp = expectedHeelingHp;
         this.causeOfDeath = causeOfDeath;
     }
+
+    /** 
+     * @return itemName アイテム名
+     */
     public String getItemName() {
         return itemName;
     }
+
+    /** 
+     * @return dangerLevel 危険度
+     */
     public int getDangerLevel() {
         return dangerLevel;
     }
+
+    /** 
+     * @return expectedHeelingHp 食べたときのHP回復量
+     */
     public int getExpectedHeelingHP() {
         return expectedHeelingHp;   
     }
+
+    /** 
+     * @return causeOfDeath 死因
+     */
     public String getCauseOfDeath() {
         return causeOfDeath;
     }
+
+    /**
+     * アイテムの情報を表示
+     */
     public void showInfo(){
         System.out.println(itemName + " を見つけました。");
         System.out.println("危険度 : " + dangerLevel);
